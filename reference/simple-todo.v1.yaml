@@ -1,0 +1,232 @@
+openapi: 3.0.0
+info:
+  title: simple-todo
+  version: '1.0'
+  description: ''
+servers:
+  - url: 'http://localhost:3100'
+    description: mock server
+  - description: localhost
+    url: 'http://localhost:8080/api/v1'
+paths:
+  /articles:
+    get:
+      summary: Your GET endpoint
+      tags:
+        - articles
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  articles:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Article'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: '404'
+                  message:
+                    type: string
+                    example: article not find
+              examples: {}
+      operationId: get-articles
+    post:
+      summary: ''
+      operationId: post-articles
+      responses:
+        '201':
+          description: Created
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  '':
+                    type: string
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: Authorization
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: タイトル
+                body:
+                  type: string
+                  example: ないようないようないようないようないようないよう
+              required:
+                - title
+                - body
+        description: ''
+  /users:
+    get:
+      summary: Your GET endpoint
+      tags:
+        - users
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+      operationId: get-users
+      description: ''
+    parameters: []
+  '/articles/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags:
+        - articles
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  article:
+                    $ref: '#/components/schemas/Article'
+      operationId: get-articles-id
+    put:
+      summary: ''
+      operationId: put-articles-id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                body:
+                  type: string
+      parameters:
+        - schema:
+            type: string
+          in: header
+          description: ''
+          name: Authorization
+    delete:
+      summary: ''
+      operationId: delete-articles-id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: Authorization
+  '/user/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags:
+        - users
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+      operationId: get-user-id
+      description: ''
+components:
+  schemas:
+    User:
+      title: User
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 1
+        name:
+          type: string
+          example: テスト
+        email:
+          type: string
+          format: email
+          example: test@email.com
+        password:
+          type: string
+          format: password
+          example: password
+      required:
+        - id
+        - name
+        - email
+        - password
+    Article:
+      title: Article
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          exclusiveMinimum: false
+        title:
+          type: string
+        body:
+          type: string
+        user_id:
+          type: integer
+          format: int64
+          minimum: 1
